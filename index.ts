@@ -73,7 +73,7 @@ async function init() {
   // TODO: Khoa creating
   await KhoaModel.create(khoaData);
   const khoas = await KhoaModel.find();
-  const khoaIds = khoas.map((item) => item._id.toString());
+  const khoaIds = khoas.map((item: { _id: { toString: () => any; }; }) => item._id.toString());
 
   // TODO: lop creating
   // set maKhoa into lop
@@ -82,7 +82,7 @@ async function init() {
   // create lop and get ids from lops created
   await LopModel.create(lopItems);
   const lops = await LopModel.find();
-  const lopIds = lops.map((item) => item._id.toString());
+  const lopIds = lops.map((item: { _id: { toString: () => any; }; }) => item._id.toString());
 
   // TODO: sinh vien creating
   // set maKhoa into lop
@@ -91,17 +91,17 @@ async function init() {
   // create lop and get ids from lops created
   await SinhVienModel.create(sinhVienItems);
   const sinhViens = await SinhVienModel.find();
-  const sinhVienIds = sinhViens.map((item) => item._id.toString());
+  const sinhVienIds = sinhViens.map((item: { _id: { toString: () => any; }; }) => item._id.toString());
 
   // TODO: mon hoc creating
   await monHocModel.create(monHocData);
   const monHocs = await monHocModel.find();
-  const monHocIds = monHocs.map((item) => item._id.toString());
+  const monHocIds = monHocs.map((item: { _id: { toString: () => any; }; }) => item._id.toString());
 
   // TODO: giang vien creating
   await GiangVienModel.create(giangVienData);
   const giangViens = await GiangVienModel.find();
-  const giangVienIds = giangViens.map((item) => item._id.toString());
+  const giangVienIds = giangViens.map((item: { _id: { toString: () => any; }; }) => item._id.toString());
 
   // TODO: ket qua creating
   const ketQuaItems = ketQuaData.map((item) =>
@@ -175,12 +175,12 @@ async function e() {
     .populate({
       path: "gvId",
     })
-    .transform((models) =>
+    .transform((models: any[]) =>
       models
         .filter(
-          (item) => item.lopId != null && item.mhId != null && item.gvId != null
+          (item: { lopId: null; mhId: null; gvId: null; }) => item.lopId != null && item.mhId != null && item.gvId != null
         )
-        .map((item) => {
+        .map((item: { gvId: GiangVien; lopId: Lop; mhId: MonHoc; }) => {
           let result: {
             magv?: string;
             hoTenGV?: string;
@@ -217,12 +217,12 @@ async function f() {
     .populate({
       path: "gvId",
     })
-    .transform((models) =>
+    .transform((models: any[]) =>
       models
         .filter(
-          (item) => item.lopId != null && item.mhId != null && item.gvId != null
+          (item: { lopId: any; mhId: any; gvId: any; }) => item.lopId != null && item.mhId != null && item.gvId != null
         )
-        .map((item) => {
+        .map((item: { gvId: GiangVien; mhId: MonHoc; }) => {
           let result: {
             maMH?: string;
             tenMH?: string;
