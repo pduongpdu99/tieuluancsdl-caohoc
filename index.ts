@@ -137,8 +137,8 @@ async function d() {
       $merge: {
         into: "monhocs",
         on: "maMH",
-        whenMatched: "replace",
-        whenNotMatched: insert,
+        whenMatched: "keepExisting",
+        whenNotMatched: "insert",
       },
     },
   ]);
