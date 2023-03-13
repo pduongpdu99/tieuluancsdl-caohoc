@@ -1,6 +1,7 @@
 import { connection, Schema } from "mongoose";
 
 export const GiangVienSchema = new Schema({
+  maGV: { type: Schema.Types.String, required: true },
   hoTenGV: { type: Schema.Types.String, required: true },
   hocVi: { type: Schema.Types.String, required: true },
   chuyenNganh: { type: Schema.Types.String, required: true },

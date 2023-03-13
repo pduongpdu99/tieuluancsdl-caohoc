@@ -16,7 +16,15 @@ import {
   monHocData,
 } from "./data-templates";
 import { sinhVienData } from "./data-templates/sinh-vien.data";
-import { KetQua, Lop, PhanCong, SinhVien } from "./models";
+import {
+  GiangVien,
+  KetQua,
+  Khoa,
+  Lop,
+  MonHoc,
+  PhanCong,
+  SinhVien,
+} from "./models";
 
 function lopParse(item: Lop, ids: string[]) {
   const randomValue = ids[Math.floor(Math.random() * ids.length)];
@@ -132,40 +140,107 @@ async function c() {
 }
 
 async function d() {
-  let ketQuas = await KetQuaModel.aggregate([
-    {
-      $merge: {
-        into: "monhocs",
-        on: "maMH",
-        whenMatched: "keepExisting",
-        whenNotMatched: "insert",
+  let ketQuas = await KetQuaModel.find({
+    lanThi: 1,
+  })
+    .populate({
+      path: "mhId",
+      match: { maMH: "MH01" },
+    })
+    .populate({
+      path: "svId",
+      populate: {
+        path: "lopId",
+        match: {
+          $or: [{ maLop: "K11KT2" }, { maLop: "K11DL4" }],
+        },
       },
-    },
-  ]);
+    });
 
   return ketQuas;
 }
 
 async function e() {
-  const giangVienThacSi = await GiangVienModel.find({
-    hocVi: "Thạc sĩ",
-  }).select({
-    _id: 1,
-    hoTenGV: 1,
-    chuyenNganh: 1,
-  });
-  return giangVienThacSi;
+  const models = await PhanCongModel.find({})
+    .populate({
+      path: "lopId",
+      match: { maLop: "CDTH2A" },
+      populate: {
+        path: "khoaId",
+      },
+    })
+    .populate({
+      path: "mhId",
+    })
+    .populate({
+      path: "gvId",
+    })
+    .transform((models) =>
+      models
+        .filter(
+          (item) => item.lopId != null && item.mhId != null && item.gvId != null
+        )
+        .map((item) => {
+          let result: {
+            magv?: string;
+            hoTenGV?: string;
+            tenKhoa?: string;
+            hocVi?: string;
+            tenMH?: string;
+          } = {};
+          const gv = item.gvId as GiangVien;
+          const lop = item.lopId as Lop;
+          const khoa = lop.khoaId as Khoa;
+          const monHoc = item.mhId as MonHoc;
+
+          result.magv = gv.maGV;
+          result.hoTenGV = gv.hoTenGV;
+          result.tenKhoa = khoa.tenKhoa;
+          result.hocVi = gv.hocVi;
+          result.tenMH = monHoc.tenMH;
+          return result;
+        })
+    );
+
+  return models;
 }
 
 async function f() {
-  const giangVienThacSi = await GiangVienModel.find({
-    hocVi: "Thạc sĩ",
-  }).select({
-    _id: 1,
-    hoTenGV: 1,
-    chuyenNganh: 1,
-  });
-  return giangVienThacSi;
+  const models = await PhanCongModel.find({})
+    .populate({
+      path: "lopId",
+      match: { maLop: "CDTH2A" },
+    })
+    .populate({
+      path: "mhId",
+    })
+    .populate({
+      path: "gvId",
+    })
+    .transform((models) =>
+      models
+        .filter(
+          (item) => item.lopId != null && item.mhId != null && item.gvId != null
+        )
+        .map((item) => {
+          let result: {
+            maMH?: string;
+            tenMH?: string;
+            soTC?: number;
+            hoTenGV?: string;
+          } = {};
+          const gv = item.gvId as GiangVien;
+          const monHoc = item.mhId as MonHoc;
+
+          result.maMH = monHoc.maMH;
+          result.tenMH = monHoc.tenMH;
+          result.soTC = monHoc.soTC;
+          result.hoTenGV = gv.hoTenGV;
+          return result;
+        })
+    );
+
+  return models;
 }
 
 async function g() {
@@ -188,7 +263,8 @@ async function main() {
 
   // await init();
 
-  console.log(await d());
+  const values = await f();
+  console.log(values, values.length);
 
   connection.disconnect();
 }

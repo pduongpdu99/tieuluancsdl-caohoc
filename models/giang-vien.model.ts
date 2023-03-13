@@ -3,4 +3,5 @@ export class GiangVien {
   hocVi?: string;
   chuyenNganh?: string;
   khoaId?: string;
+  maGV?: string;
 }
