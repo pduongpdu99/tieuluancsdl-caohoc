@@ -1,6 +1,9 @@
+import { MonHoc } from "./mon-hoc.model";
+import { SinhVien } from "./sinh-vien.model";
+
 export class KetQua {
-  maSV?: string;
-  maMH?: string;
+  svId?: string;
+  mhId?: string;
   lanThi?: number;
   diemThi?: number;
 }

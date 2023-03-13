@@ -1,5 +1,5 @@
 export class PhanCong {
-  maLop?: string;
-  maMH?: string;
-  maGV?: string;
+  lopId?: string;
+  mhId?: string;
+  gvId?: string;
 }

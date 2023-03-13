@@ -3,5 +3,5 @@ export class SinhVien {
   nu?: boolean;
   ngaySinh?: Date | string;
   noiSinh?: string;
-  maLop?: string;
+  lopId?: string;
 }

@@ -4,7 +4,7 @@ export const GiangVienSchema = new Schema({
   hoTenGV: { type: Schema.Types.String, required: true },
   hocVi: { type: Schema.Types.String, required: true },
   chuyenNganh: { type: Schema.Types.String, required: true },
-  maKhoa: { type: Schema.Types.ObjectId, ref: "Khoa" },
+  khoaId: { type: Schema.Types.ObjectId, ref: "Khoa" },
 });
 
 export const GiangVienModel = connection.model("GiangVien", GiangVienSchema);

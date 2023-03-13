@@ -5,7 +5,7 @@ export const sinhVienSchema = new Schema({
   nu: { type: Schema.Types.Boolean, default: false, required: false },
   ngaySinh: { type: Schema.Types.Date, required: false },
   noiSinh: { type: Schema.Types.String, required: false },
-  maLop: { type: Schema.Types.ObjectId, ref: "Lop" },
+  lopId: { type: Schema.Types.ObjectId, ref: "Lop" },
 });
 
 export const SinhVienModel = connection.model("SinhVien", sinhVienSchema);

@@ -1,6 +1,5 @@
-import { SinhVien } from "./sinh-vien.model";
-
 export class Lop {
+  maLop?: string;
   tenLop?: string;
-  maKhoa?: string;
+  khoaId?: string;
 }

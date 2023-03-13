@@ -16,40 +16,40 @@ import {
   monHocData,
 } from "./data-templates";
 import { sinhVienData } from "./data-templates/sinh-vien.data";
-import { KetQua, Lop, MonHoc, PhanCong, SinhVien } from "./models";
+import { KetQua, Lop, PhanCong, SinhVien } from "./models";
 
 function lopParse(item: Lop, ids: string[]) {
   const randomValue = ids[Math.floor(Math.random() * ids.length)];
-  item.maKhoa = randomValue;
+  item.khoaId = randomValue;
   return item;
 }
 
 function sinhVienParse(item: SinhVien, ids: string[]) {
   const randomValue = ids[Math.floor(Math.random() * ids.length)];
-  item.maLop = randomValue;
+  item.lopId = randomValue;
   return item;
 }
 
 function ketQuaParse(item: KetQua, maSVs: string[], maMHs: string[]) {
   const randomValue1 = maSVs[Math.floor(Math.random() * maSVs.length)];
   const randomValue2 = maMHs[Math.floor(Math.random() * maMHs.length)];
-  item.maSV = randomValue1;
-  item.maMH = randomValue2;
+  item.svId = randomValue1;
+  item.mhId = randomValue2;
   return item;
 }
 
 function phanCongParse(
   item: PhanCong,
-  maLops: string[],
-  maMHs: string[],
-  maGVs: string[]
+  lopIds: string[],
+  mhIds: string[],
+  gvIds: string[]
 ) {
-  const randomValue1 = maLops[Math.floor(Math.random() * maLops.length)];
-  const randomValue2 = maMHs[Math.floor(Math.random() * maMHs.length)];
-  const randomValue3 = maGVs[Math.floor(Math.random() * maGVs.length)];
-  item.maLop = randomValue1;
-  item.maMH = randomValue2;
-  item.maGV = randomValue3;
+  const randomValue1 = lopIds[Math.floor(Math.random() * lopIds.length)];
+  const randomValue2 = mhIds[Math.floor(Math.random() * mhIds.length)];
+  const randomValue3 = gvIds[Math.floor(Math.random() * gvIds.length)];
+  item.lopId = randomValue1;
+  item.mhId = randomValue2;
+  item.gvId = randomValue3;
   return item;
 }
 
@@ -132,14 +132,18 @@ async function c() {
 }
 
 async function d() {
-  const giangVienThacSi = await GiangVienModel.find({
-    hocVi: "Thạc sĩ",
-  }).select({
-    _id: 1,
-    hoTenGV: 1,
-    chuyenNganh: 1,
-  });
-  return giangVienThacSi;
+  let ketQuas = await KetQuaModel.aggregate([
+    {
+      $merge: {
+        into: "monhocs",
+        on: "maMH",
+        whenMatched: "replace",
+        whenNotMatched: insert,
+      },
+    },
+  ]);
+
+  return ketQuas;
 }
 
 async function e() {
@@ -176,14 +180,7 @@ async function g() {
 }
 
 async function h() {
-  const giangVienThacSi = await GiangVienModel.find({
-    hocVi: "Thạc sĩ",
-  }).select({
-    _id: 1,
-    hoTenGV: 1,
-    chuyenNganh: 1,
-  });
-  return giangVienThacSi;
+  return [];
 }
 
 async function main() {
@@ -191,7 +188,7 @@ async function main() {
 
   // await init();
 
-  console.log(await c());
+  console.log(await d());
 
   connection.disconnect();
 }
